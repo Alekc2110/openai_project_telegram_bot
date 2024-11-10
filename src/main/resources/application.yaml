@@ -1,0 +1,8 @@
+openai:
+  token: ${OPENAI_TOKEN}
+  remoteUrl: https://api.openai.com/v1/chat/completions
+
+bot:
+  name: chatGPT-telegram-bot
+  token: ${BOT_TOKEN}
+  model: gpt-3.5-turbo

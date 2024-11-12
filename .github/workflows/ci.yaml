@@ -18,7 +18,10 @@
          - name: clean and compile project with Maven
            run: mvn clean compile
          - name: run tests
-           run: mvn test
+           env:
+             openai_token: ${{secrets.OPENAI_TOKEN}}
+             bot_token: ${{secrets.BOT_TOKEN}}
+           run: mvn -DOPENAI_TOKEN=openai_token -DBOT_TOKEN=bot_token test
     package:
        needs: test
        runs-on: ubuntu-latest

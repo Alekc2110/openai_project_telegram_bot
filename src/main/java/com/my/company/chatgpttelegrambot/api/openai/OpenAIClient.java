@@ -1,8 +1,6 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
-import com.my.company.chatgpttelegrambot.api.exception.exceptionHandler.CustomExceptionHandler;
 import com.my.company.chatgpttelegrambot.api.openai.model.ChatCompletionObject;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

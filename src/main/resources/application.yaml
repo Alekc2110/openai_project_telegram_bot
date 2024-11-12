@@ -5,4 +5,5 @@ openai:
 bot:
   name: chatGPT-telegram-bot
   token: ${BOT_TOKEN}
-  model: gpt-3.5-turbo
+  model: gpt-4o-mini
+#  model: dall-e-2 # to create images

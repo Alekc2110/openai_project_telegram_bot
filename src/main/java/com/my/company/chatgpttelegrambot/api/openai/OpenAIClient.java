@@ -43,6 +43,5 @@ public class OpenAIClient {
         ResponseEntity<ChatCompletionObject> responseEntity = client.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionObject.class);
 
         return responseEntity.getBody();
-
     }
 }

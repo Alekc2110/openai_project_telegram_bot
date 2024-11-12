@@ -1,5 +1,6 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
+import com.my.company.chatgpttelegrambot.api.exception.exceptionHandler.CustomExceptionHandler;
 import com.my.company.chatgpttelegrambot.api.openai.model.ChatCompletionObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
 @Slf4j
 public class OpenAIClient {
     private final String token;

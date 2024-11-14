@@ -7,6 +7,7 @@ import com.my.company.chatgpttelegrambot.api.openai.model.request.OpenAIRequest;
 import com.my.company.chatgpttelegrambot.api.openai.model.request.TextOpenAIRequest;
 import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,13 +15,17 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ChatGptModelStrategy {
+
+    @Value("${openai.textRemoteUrl}")
+    private String textRemoteUrl;
+
     private final ChatGptService service;
 
     public Response getOpenAIResponse(Long userId, String textInput, DataType dataType) {
         return switch (dataType) {
             case TEXT -> {
                 OpenAIRequest openAIRequest = createRequestForOpenAI(userId, textInput, dataType);
-                yield service.getTextResponseChatForUser(userId, openAIRequest);
+                yield service.getResponseChatForUser(userId, openAIRequest, textRemoteUrl);
             }
         };
     }

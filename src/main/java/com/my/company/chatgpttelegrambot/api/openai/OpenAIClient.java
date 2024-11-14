@@ -29,7 +29,6 @@ public class OpenAIClient {
         HttpEntity<String> httpEntity = new HttpEntity<>(request.toString(), headers);
         log.info("created request for openApi: {}", request);
         ResponseEntity<ChatCompletionResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionResponse.class);
-        //TODO httpClient должен возвращать конкретный тип класса иначе Jackson бросает исключение HttpMessageConversionException
 
         return responseEntity.getBody();
     }

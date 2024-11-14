@@ -41,7 +41,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             var openAIResponse = strategy.getOpenAIResponse(update.getMessage().getFrom().getId(), text, DataType.TEXT);
-            log.info("received openApi response: {}",openAIResponse);
+            log.info("received openApi response for user with id: {}", update.getMessage().getFrom().getId());
             sendResponse(chatId, openAIResponse);
         }
     }

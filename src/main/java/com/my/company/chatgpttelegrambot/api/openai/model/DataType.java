@@ -1,5 +1,6 @@
 package com.my.company.chatgpttelegrambot.api.openai.model;
 
-public interface Response {
-    String getContent();
+public enum DataType {
+    TEXT,
+//    IMAGE, AUDIO, SPEECH
 }

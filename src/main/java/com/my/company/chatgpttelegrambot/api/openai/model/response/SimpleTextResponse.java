@@ -1,4 +1,4 @@
-package com.my.company.chatgpttelegrambot.api.openai.model;
+package com.my.company.chatgpttelegrambot.api.openai.model.response;
 
 public record SimpleTextResponse (String text) implements Response {
     @Override

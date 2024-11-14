@@ -1,16 +1,14 @@
 package com.my.company.chatgpttelegrambot.domain.service;
 
+import com.my.company.chatgpttelegrambot.api.openai.model.ChatHistory;
 import com.my.company.chatgpttelegrambot.api.openai.model.DataType;
 import com.my.company.chatgpttelegrambot.api.openai.model.Message;
 import com.my.company.chatgpttelegrambot.api.openai.model.OpenAIModel;
-import com.my.company.chatgpttelegrambot.api.openai.model.request.OpenAIRequest;
 import com.my.company.chatgpttelegrambot.api.openai.model.request.TextOpenAIRequest;
 import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -20,28 +18,41 @@ public class ChatGptModelStrategy {
     private String textRemoteUrl;
 
     private final ChatGptService service;
+    private final ChatGptHistoryCache textContentCache;
 
     public Response getOpenAIResponse(Long userId, String textInput, DataType dataType) {
         return switch (dataType) {
             case TEXT -> {
-                OpenAIRequest openAIRequest = createRequestForOpenAI(userId, textInput, dataType);
-                yield service.getResponseChatForUser(userId, openAIRequest, textRemoteUrl);
+                TextOpenAIRequest openAIRequest = createRequestForOpenAI(userId, textInput, dataType);
+                var response = service.getResponseChatForUser(openAIRequest, textRemoteUrl);
+                String content = response.getContent();
+                createMessageCache(userId, Message.builder()
+                        .content(content)
+                        .role("user")
+                        .build());
+                yield response;
             }
         };
     }
 
-    private OpenAIRequest createRequestForOpenAI(Long userId, String textInput, DataType dataType){
-      return switch (dataType){
+    private TextOpenAIRequest createRequestForOpenAI(Long userId, String textInput, DataType dataType) {
+        return switch (dataType) {
             case TEXT -> {
-               yield new TextOpenAIRequest(
+                var history = createMessageCache(userId, Message.builder()
+                        .content(textInput)
+                        .role("user")
+                        .build());
+                yield new TextOpenAIRequest(
                         OpenAIModel.GPT_4O_MINI.getModelName(),
-                        List.of(Message.builder()
-                                .content(textInput)
-                                .role("user")
-                                .build()),
+                        history.chatMessages(),
                         0.5f
                 );
             }
         };
+    }
+
+    private ChatHistory createMessageCache(Long userId, Message message) {
+        textContentCache.creatHistoryIfNotExist(userId);
+        return textContentCache.addMessageToHistory(userId, message);
     }
 }

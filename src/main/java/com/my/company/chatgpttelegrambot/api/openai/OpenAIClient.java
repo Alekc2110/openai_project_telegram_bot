@@ -1,6 +1,6 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.request.OpenAIRequest;
+import com.my.company.chatgpttelegrambot.api.openai.model.request.TextOpenAIRequest;
 import com.my.company.chatgpttelegrambot.api.openai.model.response.ChatCompletionResponse;
 import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,14 @@ public class OpenAIClient {
         this.httpClient = client;
     }
 
-    public Response sendRequest(OpenAIRequest request, String url) {
+    public Response sendRequest(TextOpenAIRequest request, String url) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + openAiToken);
         headers.set("Content-type", "application/json");
 
 
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(request.toString(), headers);
+        HttpEntity<TextOpenAIRequest> httpEntity = new HttpEntity<>(request, headers);
         log.info("created request for openApi: {}", request);
         ResponseEntity<ChatCompletionResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionResponse.class);
 

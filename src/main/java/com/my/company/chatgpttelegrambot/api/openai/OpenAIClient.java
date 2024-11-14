@@ -1,8 +1,9 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.ChatCompletionObject;
+import com.my.company.chatgpttelegrambot.api.openai.model.request.OpenAIRequest;
+import com.my.company.chatgpttelegrambot.api.openai.model.response.ChatCompletionResponse;
+import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -10,37 +11,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class OpenAIClient {
-    private final String token;
-    private final RestTemplate client;
-    @Value("${bot.model}")
-    private String chatGptModel;
-    @Value("${openai.remoteUrl}")
-    private String url;
+    private final String openAiToken;
+    private final RestTemplate httpClient;
 
     public OpenAIClient(String token, RestTemplate client) {
-        this.token = token;
-        this.client = client;
+        this.openAiToken = token;
+        this.httpClient = client;
     }
 
-    public ChatCompletionObject createChatCompletion(String message) {
+    public Response sendRequest(OpenAIRequest request, String url) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
+        headers.set("Authorization", "Bearer " + openAiToken);
         headers.set("Content-type", "application/json");
 
-        String request = """
-                {
-                     "model": "%s",
-                     "messages": [{
-                                  "role": "user",
-                                  "content": "%s"
-                                  }],
-                     "temperature": 0.5
-                   }
-                """.formatted(chatGptModel, message);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(request, headers);
+
+        HttpEntity<String> httpEntity = new HttpEntity<>(request.toString(), headers);
         log.info("created request for openApi: {}", request);
-        ResponseEntity<ChatCompletionObject> responseEntity = client.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionObject.class);
+        ResponseEntity<ChatCompletionResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionResponse.class);
+        //TODO httpClient должен возвращать конкретный тип класса иначе Jackson бросает исключение HttpMessageConversionException
 
         return responseEntity.getBody();
     }

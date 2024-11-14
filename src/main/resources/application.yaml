@@ -1,9 +1,9 @@
 openai:
   token: ${OPENAI_TOKEN}
-  remoteUrl: https://api.openai.com/v1/chat/completions
+  textRemoteUrl: https://api.openai.com/v1/chat/completions
 
 bot:
   name: chatGPT-telegram-bot
   token: ${BOT_TOKEN}
-  model: gpt-4o-mini
+#  model: gpt-4o-mini
 #  model: dall-e-2 # to create images

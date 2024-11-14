@@ -1,8 +1,12 @@
-package com.my.company.chatgpttelegrambot.api.bot;
+package com.my.company.chatgpttelegrambot.domain.bot;
 
 import com.my.company.chatgpttelegrambot.api.openai.OpenAIClient;
-import com.my.company.chatgpttelegrambot.api.openai.model.Response;
-import com.my.company.chatgpttelegrambot.api.openai.model.SimpleTextResponse;
+import com.my.company.chatgpttelegrambot.api.openai.model.DataType;
+import com.my.company.chatgpttelegrambot.api.openai.model.request.OpenAIRequest;
+import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
+import com.my.company.chatgpttelegrambot.api.openai.model.response.SimpleTextResponse;
+import com.my.company.chatgpttelegrambot.domain.service.ChatGptModelStrategy;
+import com.my.company.chatgpttelegrambot.domain.service.ChatGptService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -14,12 +18,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final String botName;
-    private final OpenAIClient client;
+    private final ChatGptModelStrategy strategy;
 
-    public TelegramBot(DefaultBotOptions options, String botToken, String botName, OpenAIClient client) {
+    public TelegramBot(DefaultBotOptions options, String botToken, String botName, ChatGptModelStrategy strategy) {
         super(options, botToken);
         this.botName = botName;
-        this.client = client;
+        this.strategy = strategy;
     }
 
 
@@ -36,7 +40,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 return;
             }
 
-            var openAIResponse = client.createChatCompletion(text);
+            var openAIResponse = strategy.getOpenAIResponse(update.getMessage().getFrom().getId(), text, DataType.TEXT);
             log.info("received openApi response: {}",openAIResponse);
             sendResponse(chatId, openAIResponse);
         }

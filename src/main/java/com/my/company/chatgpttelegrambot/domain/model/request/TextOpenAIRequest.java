@@ -1,6 +1,6 @@
-package com.my.company.chatgpttelegrambot.api.openai.model.request;
+package com.my.company.chatgpttelegrambot.domain.model.request;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.Message;
+import com.my.company.chatgpttelegrambot.domain.model.Message;
 import lombok.*;
 
 import java.util.List;

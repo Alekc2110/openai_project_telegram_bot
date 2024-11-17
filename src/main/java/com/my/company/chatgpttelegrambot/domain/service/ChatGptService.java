@@ -1,8 +1,8 @@
 package com.my.company.chatgpttelegrambot.domain.service;
 
 import com.my.company.chatgpttelegrambot.api.openai.OpenAIClient;
-import com.my.company.chatgpttelegrambot.api.openai.model.request.TextOpenAIRequest;
-import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
+import com.my.company.chatgpttelegrambot.domain.model.request.TextOpenAIRequest;
+import com.my.company.chatgpttelegrambot.domain.model.response.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

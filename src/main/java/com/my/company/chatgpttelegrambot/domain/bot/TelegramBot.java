@@ -1,8 +1,8 @@
 package com.my.company.chatgpttelegrambot.domain.bot;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.DataType;
-import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
-import com.my.company.chatgpttelegrambot.api.openai.model.response.SimpleTextResponse;
+import com.my.company.chatgpttelegrambot.domain.model.DataType;
+import com.my.company.chatgpttelegrambot.domain.model.response.Response;
+import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextResponse;
 import com.my.company.chatgpttelegrambot.domain.service.ChatGptModelStrategy;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

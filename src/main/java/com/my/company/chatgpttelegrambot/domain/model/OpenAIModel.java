@@ -1,4 +1,4 @@
-package com.my.company.chatgpttelegrambot.api.openai.model;
+package com.my.company.chatgpttelegrambot.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

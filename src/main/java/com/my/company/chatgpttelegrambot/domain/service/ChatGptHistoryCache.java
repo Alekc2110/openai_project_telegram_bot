@@ -1,7 +1,7 @@
 package com.my.company.chatgpttelegrambot.domain.service;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.ChatHistory;
-import com.my.company.chatgpttelegrambot.api.openai.model.Message;
+import com.my.company.chatgpttelegrambot.domain.model.ChatHistory;
+import com.my.company.chatgpttelegrambot.domain.model.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.el.util.ConcurrentCache;
 import org.springframework.stereotype.Service;

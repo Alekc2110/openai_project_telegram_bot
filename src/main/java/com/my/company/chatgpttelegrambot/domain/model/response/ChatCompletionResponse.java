@@ -1,4 +1,4 @@
-package com.my.company.chatgpttelegrambot.api.openai.model.response;
+package com.my.company.chatgpttelegrambot.domain.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

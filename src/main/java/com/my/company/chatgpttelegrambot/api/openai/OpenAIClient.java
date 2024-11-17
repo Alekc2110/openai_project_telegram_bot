@@ -1,8 +1,8 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
-import com.my.company.chatgpttelegrambot.api.openai.model.request.TextOpenAIRequest;
-import com.my.company.chatgpttelegrambot.api.openai.model.response.ChatCompletionResponse;
-import com.my.company.chatgpttelegrambot.api.openai.model.response.Response;
+import com.my.company.chatgpttelegrambot.domain.model.request.TextOpenAIRequest;
+import com.my.company.chatgpttelegrambot.domain.model.response.ChatCompletionResponse;
+import com.my.company.chatgpttelegrambot.domain.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

@@ -20,7 +20,9 @@ public class ChatGptHistoryCache {
     }
 
     public void creatHistoryIfNotExist(Long userId) {
-        chatHistoryMap.put(userId, new ChatHistory(new ArrayList<>()));
+        if(getUserHistory(userId).isEmpty()){
+            chatHistoryMap.put(userId, new ChatHistory(new ArrayList<>()));
+        }
     }
 
     public ChatHistory addMessageToHistory(Long userId, Message message) {

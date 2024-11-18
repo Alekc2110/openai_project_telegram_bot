@@ -14,23 +14,21 @@ import java.util.List;
 public class TelegramCommandDispatcher {
     private final List<TelegramCommandHandler> telegramCommandHandlerList;
 
-    public BotApiMethod<?> processCommand(Update update){
-//        if(!isCommand(update)){
-//            throw new IllegalStateException("Not a command passed");
-//        }
+    public BotApiMethod<?> processCommand(Update update) {
         var text = update.getMessage().getText();
         TelegramCommandHandler commandHandler = telegramCommandHandlerList.stream()
                 .filter(handler -> handler.getSupportedCommand().getCommandName().equals(text))
                 .findFirst()
-                .orElseGet(()-> telegramCommandHandlerList
-                        .stream()
-                        .filter(h-> h.getSupportedCommand().equals(TelegramCommand.NOT_A_COMMAND))
-                        .findFirst()
-                        .get());
+                .orElseGet(() ->
+                        telegramCommandHandlerList
+                                .stream()
+                                .filter(h -> h.getSupportedCommand().equals(TelegramCommand.NOT_A_COMMAND))
+                                .findFirst()
+                                .get());
         return commandHandler.processCommand(update);
     }
 
-    public boolean isCommand(Update update){
+    public boolean isCommand(Update update) {
         return update.hasMessage() && update.getMessage().hasText() && update.getMessage().getText().startsWith("/");
     }
 }

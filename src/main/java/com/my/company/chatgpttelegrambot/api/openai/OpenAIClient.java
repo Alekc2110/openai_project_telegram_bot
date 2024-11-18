@@ -1,7 +1,7 @@
 package com.my.company.chatgpttelegrambot.api.openai;
 
 import com.my.company.chatgpttelegrambot.domain.model.request.TextOpenAIRequest;
-import com.my.company.chatgpttelegrambot.domain.model.response.ChatCompletionResponse;
+import com.my.company.chatgpttelegrambot.domain.model.response.OpenAITextResponse;
 import com.my.company.chatgpttelegrambot.domain.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -28,7 +28,7 @@ public class OpenAIClient {
 
         HttpEntity<TextOpenAIRequest> httpEntity = new HttpEntity<>(request, headers);
         log.info("created request for openApi: {}", request);
-        ResponseEntity<ChatCompletionResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, ChatCompletionResponse.class);
+        ResponseEntity<OpenAITextResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, OpenAITextResponse.class);
 
         return responseEntity.getBody();
     }

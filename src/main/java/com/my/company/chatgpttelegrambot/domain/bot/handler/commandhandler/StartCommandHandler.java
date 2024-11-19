@@ -1,4 +1,4 @@
-package com.my.company.chatgpttelegrambot.domain.bot.handler;
+package com.my.company.chatgpttelegrambot.domain.bot.handler.commandhandler;
 
 import com.my.company.chatgpttelegrambot.domain.model.TelegramCommand;
 import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextResponse;

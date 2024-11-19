@@ -1,6 +1,6 @@
 package com.my.company.chatgpttelegrambot.domain.bot;
 
-import com.my.company.chatgpttelegrambot.domain.bot.handler.TelegramCommandHandler;
+import com.my.company.chatgpttelegrambot.domain.bot.handler.commandhandler.TelegramCommandHandler;
 import com.my.company.chatgpttelegrambot.domain.model.TelegramCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -3,13 +3,13 @@ package com.my.company.chatgpttelegrambot.domain.bot;
 import com.my.company.chatgpttelegrambot.domain.bot.handler.commandhandler.TelegramCommandHandler;
 import com.my.company.chatgpttelegrambot.domain.model.TelegramCommand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class TelegramCommandDispatcher {
     private final List<TelegramCommandHandler> telegramCommandHandlerList;

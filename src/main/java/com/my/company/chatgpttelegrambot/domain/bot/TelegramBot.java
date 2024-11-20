@@ -7,6 +7,8 @@ import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextRespons
 import com.my.company.chatgpttelegrambot.domain.service.ChatGptModelStrategy;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -18,17 +20,21 @@ import java.io.File;
 
 
 @Slf4j
+@Component
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final String botName;
+    @Value(value = "${bot.name}")
+    private String botName;
     private final ChatGptModelStrategy strategy;
     private final TelegramCommandDispatcher commandDispatcher;
     private final TelegramDataHandler<String, File> voiceHandler;
 
-    public TelegramBot(String botToken, String botName, ChatGptModelStrategy strategy,
-                       TelegramCommandDispatcher telegramCommandDispatcher, TelegramDataHandler<String, File> voiceHandler) {
+    public TelegramBot(@Value(value = "${bot.token}") String botToken,
+                       ChatGptModelStrategy strategy,
+                       TelegramCommandDispatcher telegramCommandDispatcher,
+                       TelegramDataHandler<String, File> voiceHandler
+    ) {
         super(new DefaultBotOptions(), botToken);
-        this.botName = botName;
         this.strategy = strategy;
         this.commandDispatcher = telegramCommandDispatcher;
         this.voiceHandler = voiceHandler;

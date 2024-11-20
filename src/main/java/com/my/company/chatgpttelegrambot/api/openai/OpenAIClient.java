@@ -6,7 +6,6 @@ import com.my.company.chatgpttelegrambot.domain.model.response.OpenAITextRespons
 import com.my.company.chatgpttelegrambot.domain.model.response.Response;
 import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.File;
+
 @Slf4j
 public class OpenAIClient {
     private final String openAiToken;
@@ -31,29 +33,36 @@ public class OpenAIClient {
         headers.set("Content-Type", "application/json");
 
 
-
         HttpEntity<TextOpenAIRequest> httpEntity = new HttpEntity<>(request, headers);
         log.info("created openApi request for model : {}", request.model());
         ResponseEntity<OpenAITextResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, OpenAITextResponse.class);
 
         return responseEntity.getBody();
     }
-
     public Response sendVoiceToTranscription(VoiceOpenAIRequest request, String url) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + openAiToken);
-        headers.set("Content-Type", "multipart/form-data");
+        ResponseEntity<SimpleTextResponse> responseEntity;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + openAiToken);
+            headers.set("Content-Type", "multipart/form-data");
 
 
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new FileSystemResource(request.audioFile()));
-        body.add("model", request.model());
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", new FileSystemResource(request.audioFile()));
+            body.add("model", request.model());
 
 
-        var httpEntity = new HttpEntity<>(body, headers);
-        log.info("created openApi request for model : {}", request.model());
-        ResponseEntity<SimpleTextResponse> responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, SimpleTextResponse.class);
-
+            var httpEntity = new HttpEntity<>(body, headers);
+            log.info("created openApi request for model : {}", request.model());
+            responseEntity = httpClient.exchange(url, HttpMethod.POST, httpEntity, SimpleTextResponse.class);
+        } finally {
+            File file = request.audioFile();
+            if (file.delete()) {
+                log.info("deleted temp audio file: {} after processing voiceRequest", file.getName());
+            } else {
+                log.error("could not delete temp audio file: {} after processing voiceRequest", file.getName());
+            }
+        }
         return responseEntity.getBody();
     }
 }

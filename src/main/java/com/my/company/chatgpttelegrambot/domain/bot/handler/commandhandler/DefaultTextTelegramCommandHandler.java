@@ -5,14 +5,14 @@ import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextRespons
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
 public class DefaultTextTelegramCommandHandler implements TelegramCommandHandler {
     @Override
-    public BotApiMethod<?> processCommand(Update update) {
+    public BotApiMethod<?> processCommand(Message message) {
         SimpleTextResponse response = new SimpleTextResponse("This command not supported!");
-        return new SendMessage(update.getMessage().getChatId().toString(), response.getContent());
+        return new SendMessage(message.getChatId().toString(), response.getContent());
     }
 
     @Override

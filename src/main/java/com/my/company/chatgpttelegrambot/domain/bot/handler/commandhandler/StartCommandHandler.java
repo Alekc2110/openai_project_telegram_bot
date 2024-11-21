@@ -5,7 +5,7 @@ import com.my.company.chatgpttelegrambot.domain.model.response.SimpleTextRespons
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
 public class StartCommandHandler implements TelegramCommandHandler {
@@ -13,9 +13,9 @@ public class StartCommandHandler implements TelegramCommandHandler {
             "Hello %s, this bot for using OpenAI technologies. let`s get started!"
             """;
     @Override
-    public BotApiMethod<?> processCommand(Update update) {
-        SimpleTextResponse response = new SimpleTextResponse(HELLO_MESSAGE.formatted(update.getMessage().getChat().getFirstName()));
-        return new SendMessage(update.getMessage().getChatId().toString(), response.getContent());
+    public BotApiMethod<?> processCommand(Message message) {
+        SimpleTextResponse response = new SimpleTextResponse(HELLO_MESSAGE.formatted(message.getChat().getFirstName()));
+        return new SendMessage(message.getChatId().toString(), response.getContent());
     }
 
     @Override

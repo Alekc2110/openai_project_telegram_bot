@@ -1,5 +1,8 @@
 package com.my.company.chatgpttelegrambot.domain.bot.handler.datahandler;
 
+import com.my.company.chatgpttelegrambot.domain.model.DataType;
+import com.my.company.chatgpttelegrambot.domain.model.response.Response;
+import com.my.company.chatgpttelegrambot.domain.service.ChatGptModelStrategy;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -7,8 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.File;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 
 import java.io.*;
 import java.net.URI;
@@ -16,24 +25,48 @@ import java.net.URL;
 
 @Slf4j
 @Component
-public class TelegramVoiceHandler implements TelegramDataHandler<String, java.io.File> {
+public class TelegramVoiceHandler implements TelegramDataHandler<Message, BotApiMethod<?>> {
 
     @Value("${bot.token}")
     private String botToken;
     private final DefaultAbsSender telegramSender;
+    private final ChatGptModelStrategy strategy;
 
-    public TelegramVoiceHandler(@Lazy DefaultAbsSender telegramSender) {
+    public TelegramVoiceHandler(@Lazy DefaultAbsSender telegramSender, ChatGptModelStrategy strategy) {
         this.telegramSender = telegramSender;
+        this.strategy = strategy;
     }
 
     @SneakyThrows
     @Override
-    public java.io.File handleData(String fileId) {
+    public BotApiMethod<?> handleTelegramData(Message message) {
+        var chatId = message.getChatId();
+        var userId = message.getFrom().getId();
+        String fileUrl = getTelegramFileUrl(message.getVoice().getFileId());
+        java.io.File tempAudioFile = getByteArrayFromUrl(fileUrl);
+        SendMessage sendMessage = null;
+        var openAIResponseOptional = strategy.getOpenAIResponse(userId, tempAudioFile, DataType.VOICE);
+        if (openAIResponseOptional.isPresent()) {
+            Response response = openAIResponseOptional.get();
+            var responseOptional = strategy.getOpenAIResponse(userId, response.getContent(), DataType.TEXT);
+            if(responseOptional.isPresent()){
+                Response textResponse = responseOptional.get();
+                sendMessage = new SendMessage(chatId.toString(), textResponse.getContent());
+            } else {
+                log.error("no text response received from chatGPT while handle text request");
+            }
+        } else {
+            log.error("no text response received from chatGPT while handle voice request");
+        }
+        return sendMessage;
+    }
+
+    @SneakyThrows
+    private String getTelegramFileUrl(String fileId) {
         File telegramFile = telegramSender.execute(GetFile.builder()
                 .fileId(fileId)
                 .build());
-        String fileUrl = telegramFile.getFileUrl(botToken);
-        return getByteArrayFromUrl(fileUrl);
+        return telegramFile.getFileUrl(botToken);
     }
 
     @SneakyThrows

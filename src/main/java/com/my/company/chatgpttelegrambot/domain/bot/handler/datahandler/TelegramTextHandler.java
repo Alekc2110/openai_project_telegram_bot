@@ -6,18 +6,17 @@ import com.my.company.chatgpttelegrambot.domain.service.ChatGptModelStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TelegramTextHandler implements TelegramDataHandler<Message, BotApiMethod<?>> {
+public class TelegramTextHandler implements TelegramDataHandler<Message, SendMessage> {
 
     private final ChatGptModelStrategy strategy;
     @Override
-    public BotApiMethod<?> handleTelegramData(Message message) {
+    public SendMessage handleTelegramData(Message message) {
         var text = message.getText();
         var chatId = message.getChatId();
         log.info("message update from bot: {} for chat with id: {}", text, chatId);

@@ -10,22 +10,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 
 @Slf4j
 @Component
-public class TelegramVoiceHandler implements TelegramDataHandler<Message, BotApiMethod<?>> {
+public class TelegramVoiceHandler implements TelegramDataHandler<Message, SendMessage> {
 
     @Value("${bot.token}")
     private String botToken;
@@ -39,7 +38,7 @@ public class TelegramVoiceHandler implements TelegramDataHandler<Message, BotApi
 
     @SneakyThrows
     @Override
-    public BotApiMethod<?> handleTelegramData(Message message) {
+    public SendMessage handleTelegramData(Message message) {
         var chatId = message.getChatId();
         var userId = message.getFrom().getId();
         String fileUrl = getTelegramFileUrl(message.getVoice().getFileId());
@@ -49,7 +48,7 @@ public class TelegramVoiceHandler implements TelegramDataHandler<Message, BotApi
         if (openAIResponseOptional.isPresent()) {
             Response response = openAIResponseOptional.get();
             var responseOptional = strategy.getOpenAIResponse(userId, response.getContent(), DataType.TEXT);
-            if(responseOptional.isPresent()){
+            if (responseOptional.isPresent()) {
                 Response textResponse = responseOptional.get();
                 sendMessage = new SendMessage(chatId.toString(), textResponse.getContent());
             } else {

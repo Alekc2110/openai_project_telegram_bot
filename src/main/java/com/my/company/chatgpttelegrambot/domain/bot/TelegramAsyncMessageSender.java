@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 @Slf4j
 @Component
 public class TelegramAsyncMessageSender {
@@ -25,11 +26,14 @@ public class TelegramAsyncMessageSender {
     }
 
     @SneakyThrows
-    public void sendMessageAsync(Long chatId, Supplier<SendMessage> action,
+    public void sendMessageAsync(Long chatId,
+                                 Supplier<SendMessage> action,
                                  Function<Throwable, SendMessage> onErrorHandler) {
-        var message = defaultAbsSender.execute(SendMessage.builder()
-                .text("Your request is processing, please wait...")
-                .build());
+        var message = defaultAbsSender.execute(
+                SendMessage.builder()
+                        .chatId(chatId)
+                        .text("Your request is processing, please wait...")
+                        .build());
 
         CompletableFuture.supplyAsync(action, executorService)
                 .exceptionally(onErrorHandler)
